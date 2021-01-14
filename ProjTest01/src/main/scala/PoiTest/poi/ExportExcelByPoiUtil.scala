@@ -1,11 +1,8 @@
-package PoiTest
+package PoiTest.poi
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.hssf.util.HSSFColor
 import org.apache.poi.ss.usermodel._
 import org.apache.poi.ss.util.{CellRangeAddress, CellUtil}
-
-import scala.util.control.Breaks.{break, breakable}
 
 object ExportExcelByPoiUtil {
 
@@ -86,6 +83,8 @@ object ExportExcelByPoiUtil {
                     poiModels = poiModels.updated(i, PoiModel(map.getOrElse(title(i),""), poiModels(i).content, index, i))
 
                 } else if (!poiModels(i).content.equals(map.getOrElse(title(i),""))) {
+
+
                   if (poiModels(i).rowIndex != index - 1) {
                     sheet.addMergedRegion(new CellRangeAddress(poiModels(i).rowIndex, index - 1, poiModels(i).cellIndex, poiModels(i).cellIndex))
                     poiModels = poiModels.updated(i, PoiModel(map.getOrElse(title(i),""), poiModels(i).content, index, i))

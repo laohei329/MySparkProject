@@ -5,12 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.sunzg</groupId>
-    <artifactId>MySparkProject</artifactId>
+    <artifactId>MySparkProjectGit</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>ProjTest01</module>
-    </modules>
 
 
 </project>

@@ -11,6 +11,18 @@
 
     <groupId>com.sunzg</groupId>
     <artifactId>ProjTest01</artifactId>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
 
@@ -32,5 +44,10 @@
             <version>3.17</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-log4j2</artifactId>
+            <version>1.7.30</version>
+        </dependency>
     </dependencies>
 </project>

@@ -1,7 +1,6 @@
-package PoiTest
+package PoiTest.poi
 
 import java.io.{File, FileOutputStream}
-import java.net.URL
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 

@@ -1,6 +1,8 @@
-package PoiTest
+package PoiTest.poi
 
+import lombok.Data
 
+@Data
 case class PoiModel(
                      //内容
                      content: String,
