@@ -2,16 +2,13 @@ import lombok.SneakyThrows;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.spark.sql.sources.In;
 
-import javax.xml.transform.Result;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.*;
-import java.util.*;
 import java.util.Date;
+import java.util.*;
 
 public class HiveServerTest {
     public static final Map<String, String> schDepartmentIdToNameMap = new LinkedHashMap<String, String>() {{
@@ -72,12 +69,12 @@ public class HiveServerTest {
         StringBuffer sb = new StringBuffer();
         StringBuffer sb2 = new StringBuffer();
         StringBuffer sb3 = new StringBuffer();
-        ArrayList<Map<String, String>> dareList = new ArrayList<>();
-        ArrayList<Map<String, String>> dareList2 = new ArrayList<>();
-        ArrayList<Map<String, String>> dareList3 = new ArrayList<>();
-        HashMap<String, List<Map<String, String>>> listHashMap = new HashMap<>();
-        HashMap<String, List<Map<String, String>>> listHashMap2 = new HashMap<>();
-        HashMap<String, List<Map<String, String>>> listHashMap3 = new HashMap<>();
+        ArrayList<Map<String, Object>> dareList = new ArrayList<>();
+        ArrayList<Map<String, Object>> dareList2 = new ArrayList<>();
+        ArrayList<Map<String, Object>> dareList3 = new ArrayList<>();
+        HashMap<String, List<Map<String, Object>>> listHashMap = new HashMap<>();
+        HashMap<String, List<Map<String, Object>>> listHashMap2 = new HashMap<>();
+        HashMap<String, List<Map<String, Object>>> listHashMap3 = new HashMap<>();
         // String projectType  1:学校 2医院 3：养老
         String projectType = map.getOrDefault("projectType", null);
 
@@ -115,7 +112,7 @@ public class HiveServerTest {
                     int sup2num = 0;
                     int i = 1;
                     while (resultSet2.next()) {
-                        HashMap<String, String> dataMap = new HashMap<>();
+                        HashMap<String, Object> dataMap = new HashMap<>();
                         dataMap.put("序号", i + "");
                         dataMap.put("企业名称", resultSet2.getString("name"));
                         Integer schStr = resultSet2.getInt("sch_num");
@@ -132,7 +129,7 @@ public class HiveServerTest {
 
                     }
 
-                    HashMap<String, String> lastdataMap2 = new HashMap<>();
+                    HashMap<String, Object> lastdataMap2 = new HashMap<>();
                     lastdataMap2.put("序号", "总计");
                     lastdataMap2.put("企业名称", "");
                     lastdataMap2.put("服务学校数量", sch2num + "");
@@ -168,12 +165,12 @@ public class HiveServerTest {
                             isfirst = false;
                         }
 
-                        HashMap<String, String> dataMap = new HashMap<>();
+                        HashMap<String, Object> dataMap = new HashMap<>();
                         oldCommittee = newCommittee;
                         newCommittee = resultSet3.getString("school_committee_name");
                         //如果出现区不一样
                         if (!oldCommittee.equals(newCommittee)) {
-                            HashMap<String, String> dataMap2 = new HashMap<>();
+                            HashMap<String, Object> dataMap2 = new HashMap<>();
                             dataMap2.put("主管部门", "总计");
                             dataMap2.put("企业名称", "");
                             dataMap2.put("服务学校数量", sch_num + "");
@@ -194,7 +191,7 @@ public class HiveServerTest {
 
                     }
 
-                    HashMap<String, String> lastdataMap3 = new HashMap<>();
+                    HashMap<String, Object> lastdataMap3 = new HashMap<>();
                     lastdataMap3.put("主管部门", "总计");
                     lastdataMap3.put("企业名称", "");
                     lastdataMap3.put("服务学校数量", sch_num + "");
@@ -220,7 +217,7 @@ public class HiveServerTest {
             int n = 0;
             while (resultSet.next()) {
 
-                HashMap<String, String> dataMap = new HashMap<>();
+                HashMap<String, Object> dataMap = new HashMap<>();
                 dataMap.put("序号", resultSet.getString("rn"));
                 dataMap.put("学校", resultSet.getString("school_name"));
                 dataMap.put("所在区", resultSet.getString("area"));
@@ -240,7 +237,7 @@ public class HiveServerTest {
 
             }
             //最后一行
-            HashMap<String, String> lasedataMap = new HashMap<>();
+            HashMap<String, Object> lasedataMap = new HashMap<>();
             lasedataMap.put("序号", "总计");
             lasedataMap.put("学校", "");
             lasedataMap.put("所在区", "");
@@ -303,7 +300,7 @@ public class HiveServerTest {
         String level2 = map.getOrDefault("level2Code", null);
         String canteenModel = map.getOrDefault("canteenModeCode", null);
         String department = AppModConfig.schDepartmentIdToNameMap.get(map.getOrDefault("committeeCode", null));
-        ArrayList<Map<String, String>> dataList = new ArrayList<>();
+        ArrayList<Map<String, Object>> dataList = new ArrayList<>();
 
         if (map.size() != 0) {
             sb.append(" where 1=1 ");
@@ -332,7 +329,7 @@ public class HiveServerTest {
         String[] excelTitleValue = {"学校名称", "学制", "性质", "主管部门",
                 "供餐模式", "是否授权交易平台", "关联单位", "供应商"};
         while (resultSet.next()) {
-            HashMap<String, String> dateMap = new HashMap<>();
+            HashMap<String, Object> dateMap = new HashMap<>();
             dateMap.put("学校名称", resultSet.getString("school_name"));
             dateMap.put("学制", AppModConfig.schTypeIdToNameMap.get(Integer.parseInt(resultSet.getString("level2"))));
             dateMap.put("性质", resultSet.getString("school_nature"));
@@ -346,7 +343,7 @@ public class HiveServerTest {
 
         con.close();
 
-        HashMap<String, List<Map<String, String>>> stringListHashMap = new HashMap<>();
+        HashMap<String, List<Map<String, Object>>> stringListHashMap = new HashMap<>();
         System.out.println("查询结束 开始execl 单元格操作"+new Date());
         stringListHashMap.put("供应关系明细表", dataList);
         int[] mer = {0, 1, 2, 3, 4, 5, 6};
@@ -381,9 +378,9 @@ public class HiveServerTest {
         sb2.append("select area,area_sch_count,area_stu_sum,area_staff_sum,school_nature,natu_sch_count,natu_stu_sum,natu_staff_sum,level_code,code_sch_count,code_stu_sum,code_staff_sum,level,level_sch_count,level_stu_sum,level_staff_sum from ads.ads_report_school_group_nature");
         StringBuffer sb3 = new StringBuffer();
         sb3.append("select area,level_code,code_sch_count,code_stu_sum,code_staff_sum,level,level_sch_count,level_stu_sum,level_staff_sum,school_nature,natu_sch_count,natu_stu_sum,natu_staff_sum from ads.ads_report_school_group_level ");
-        HashMap<String, List<Map<String, String>>> stringListHashMap2 = new HashMap<>();
-        HashMap<String, List<Map<String, String>>> stringListHashMap = new HashMap<>();
-        HashMap<String, List<Map<String, String>>> stringListHashMap3 = new HashMap<>();
+        HashMap<String, List<Map<String, Object>>> stringListHashMap2 = new HashMap<>();
+        HashMap<String, List<Map<String, Object>>> stringListHashMap = new HashMap<>();
+        HashMap<String, List<Map<String, Object>>> stringListHashMap3 = new HashMap<>();
         Workbook workbook = new HSSFWorkbook();
 
 
@@ -391,9 +388,9 @@ public class HiveServerTest {
         String level2 = AppModConfig.schTypeIdToNameMap.get(map.getOrDefault("level2Code", null));
         String canteenModel = AppModConfig.canteenModeIdToNameMap.get(map.getOrDefault("canteenModeCode", null));
         String department = AppModConfig.schDepartmentIdToNameMap.get(map.getOrDefault("committeeCode", null));
-        ArrayList<Map<String, String>> dataList = new ArrayList<>();
-        ArrayList<Map<String, String>> dataList2 = new ArrayList<>();
-        ArrayList<Map<String, String>> dataList3 = new ArrayList<>();
+        ArrayList<Map<String, Object>> dataList = new ArrayList<>();
+        ArrayList<Map<String, Object>> dataList2 = new ArrayList<>();
+        ArrayList<Map<String, Object>> dataList3 = new ArrayList<>();
         if (map.size() != 0) {
             sb.append(" where 1=1 ");
             sb2.append("  where 1=1 ");
@@ -429,7 +426,7 @@ public class HiveServerTest {
                 ResultSet resultSet = stmt.executeQuery(sb.toString());
                 int rn=1;
                 while (resultSet.next()) {
-                    HashMap<String, String> dateMap = new HashMap<>();
+                    HashMap<String, Object> dateMap = new HashMap<>();
                     dateMap.put("序号", rn + "");
                     dateMap.put("区", resultSet.getString("area"));
                     dateMap.put("学校名称", resultSet.getString("school_name"));
@@ -467,7 +464,7 @@ public class HiveServerTest {
                 ResultSet resultSet2 = stmt.executeQuery(sb2.toString());
 
                 while (resultSet2.next()) {
-                    HashMap<String, String> dateMap = new HashMap<>();
+                    HashMap<String, Object> dateMap = new HashMap<>();
                     dateMap.put("主管部门", resultSet2.getString("area"));
                     dateMap.put("学校总数量", resultSet2.getLong("area_sch_count") + "");
                     dateMap.put("学生总人数", resultSet2.getLong("area_stu_sum") + "");
@@ -505,7 +502,7 @@ public class HiveServerTest {
             // select area,level_code,code_sch_count,code_stu_sum,code_staff_sum,level,
             // level_sch_count,level_stu_sum,level_staff_sum,school_nature,
             // natu_sch_count,natu_stu_sum,natu_staff_sum from ads.ads_report_school_group_level
-            HashMap<String, String> dateMap = new HashMap<>();
+            HashMap<String, Object> dateMap = new HashMap<>();
             dateMap.put("主管部门", resultSet3.getString("area"));
             dateMap.put("学制小计", resultSet3.getString("level_code"));
             dateMap.put("小计学校数量", resultSet3.getLong("code_sch_count") + "");
